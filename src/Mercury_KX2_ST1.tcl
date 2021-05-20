@@ -1,5 +1,5 @@
 # ----------------------------------------------------------------------------------
-# Copyright (c) 2020 by Enclustra GmbH, Switzerland.
+# Copyright (c) 2021 by Enclustra GmbH, Switzerland.
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy of
 # this hardware, software, firmware, and associated documentation files (the
@@ -19,6 +19,8 @@
 # PRODUCT OR THE USE OR OTHER DEALINGS IN THE PRODUCT.
 # ----------------------------------------------------------------------------------
 
+set_property CFGBVS GND [current_design]
+set_property CONFIG_VOLTAGE 1.8 [current_design]
 set_property BITSTREAM.CONFIG.CONFIGRATE 22 [current_design]
 set_property BITSTREAM.CONFIG.OVERTEMPPOWERDOWN ENABLE [current_design]
  
