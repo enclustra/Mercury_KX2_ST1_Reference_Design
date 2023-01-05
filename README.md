@@ -8,14 +8,17 @@ Enlustra GmbH [support@enclustra.com]
 
 * Gian Koeppel
 * Daniel Duerner
+* Eike Sommer
 * Arthur Ruder
 
 ## Documentation
 
-* [Mercury KX2 ST1 Reference Design documentation](./reference_design/doc/Mercury_KX2_ST1.pdf)
+* [Mercury KX2 ST1 Reference Design documentation](./doc/Mercury_KX2_ST1.pdf)
 * Enclustra Application Notes
   - [I2C AppNote](https://github.com/enclustra/I2CAppNote)
   - [Gigabit Ethernet AppNote](https://github.com/enclustra/GigabitEthernetAppNote)
+  - [ZynqMP Video AppNote](https://github.com/enclustra/ZynqMpVideoAppNote)
+  - [ZynqMP Secure Boot AppNote](https://github.com/enclustra/ZynqMPSecureBootAppNote)
 
 ## Changelog
 See [Changelog](changelog.md).

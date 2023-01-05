@@ -1,5 +1,5 @@
 ---------------------------------------------------------------------------------------------------
--- Copyright (c) 2021 by Enclustra GmbH, Switzerland.
+-- Copyright (c) 2022 by Enclustra GmbH, Switzerland.
 --
 -- Permission is hereby granted, free of charge, to any person obtaining a copy of
 -- this hardware, software, firmware, and associated documentation files (the
@@ -36,7 +36,7 @@ entity Mercury_KX2_ST1 is
   
   port (
     
-    -- Anios_0
+    -- Anios 0
     IO0_D0_P                       : inout   std_logic;
     IO0_D1_N                       : inout   std_logic;
     IO0_D2_P                       : inout   std_logic;
@@ -61,10 +61,10 @@ entity Mercury_KX2_ST1 is
     IO0_D21_N                      : inout   std_logic;
     IO0_D22_P                      : inout   std_logic;
     IO0_D23_N                      : inout   std_logic;
-    IO0_CLK1_N                     : inout   std_logic;
-    IO0_CLK0_P                     : inout   std_logic;
+    IO0_CLK_N                      : inout   std_logic;
+    IO0_CLK_P                      : inout   std_logic;
     
-    -- Anios_1
+    -- Anios 1
     IO1_D0_P                       : inout   std_logic;
     IO1_D1_N                       : inout   std_logic;
     IO1_D2_P                       : inout   std_logic;
@@ -92,14 +92,40 @@ entity Mercury_KX2_ST1 is
     IO1_CLK1_N                     : inout   std_logic;
     IO1_CLK0_P                     : inout   std_logic;
     
-    -- Clk100_R
+    -- BUTTONS
+    BTN0_N                         : in      std_logic;
+    BTN1_N                         : in      std_logic;
+    
+    -- Clock Generator CLK1
+    CLK_REF0_N                     : in      std_logic;
+    CLK_REF0_P                     : in      std_logic;
+    
+    -- Clock Generator CLK3
+    CLK_REF2_N                     : in      std_logic;
+    CLK_REF2_P                     : in      std_logic;
+    
+    -- 100 MHz clock
     Clk100_R                       : in      std_logic;
     
-    -- Clk200
+    -- 200 MHz differential clock
     CLK200_N                       : in      std_logic;
     CLK200_P                       : in      std_logic;
     
-    -- FMC
+    -- DisplayPort
+    DP_HPD                         : in      std_logic;
+    DP_AUX_IN                      : in      std_logic;
+    DP_AUX_OE                      : out     std_logic;
+    DP_AUX_OUT                     : out     std_logic;
+    DP_LANE0_N                     : inout   std_logic;
+    DP_LANE3_N                     : inout   std_logic;
+    DP_LANE0_P                     : inout   std_logic;
+    DP_LANE3_P                     : inout   std_logic;
+    DP_LANE1_N                     : inout   std_logic;
+    DP_LANE2_N                     : inout   std_logic;
+    DP_LANE1_P                     : inout   std_logic;
+    DP_LANE2_P                     : inout   std_logic;
+    
+    -- FMC HPC Connector
     FMC_HA02_N                     : inout   std_logic;
     FMC_HA02_P                     : inout   std_logic;
     FMC_HA03_N                     : inout   std_logic;
@@ -184,6 +210,22 @@ entity Mercury_KX2_ST1 is
     FMC_LA32_P                     : inout   std_logic;
     FMC_LA33_N                     : inout   std_logic;
     FMC_LA33_P                     : inout   std_logic;
+    FMC_DP0_C2M_N                  : inout   std_logic;
+    FMC_DP0_C2M_P                  : inout   std_logic;
+    FMC_DP0_M2C_N                  : inout   std_logic;
+    FMC_DP0_M2C_P                  : inout   std_logic;
+    FMC_DP1_C2M_N                  : inout   std_logic;
+    FMC_DP1_C2M_P                  : inout   std_logic;
+    FMC_DP1_M2C_N                  : inout   std_logic;
+    FMC_DP1_M2C_P                  : inout   std_logic;
+    FMC_DP2_C2M_N                  : inout   std_logic;
+    FMC_DP2_C2M_P                  : inout   std_logic;
+    FMC_DP2_M2C_N                  : inout   std_logic;
+    FMC_DP2_M2C_P                  : inout   std_logic;
+    FMC_DP3_C2M_N                  : inout   std_logic;
+    FMC_DP3_C2M_P                  : inout   std_logic;
+    FMC_DP3_M2C_N                  : inout   std_logic;
+    FMC_DP3_M2C_P                  : inout   std_logic;
     FMC_HA00_CC_N                  : inout   std_logic;
     FMC_HA00_CC_P                  : inout   std_logic;
     FMC_HA01_CC_N                  : inout   std_logic;
@@ -202,16 +244,31 @@ entity Mercury_KX2_ST1 is
     FMC_CLK0_M2C_P                 : inout   std_logic;
     FMC_CLK1_M2C_N                 : inout   std_logic;
     FMC_CLK1_M2C_P                 : inout   std_logic;
+    FMC_GCLK0_M2C_N                : inout   std_logic;
+    FMC_GCLK0_M2C_P                : inout   std_logic;
     
     -- HDMI
-    HDMI_HPD                       : inout   std_logic;
-    HDMI_CLK_N                     : inout   std_logic;
-    HDMI_CLK_P                     : inout   std_logic;
+    HDMI_HPD                       : in      std_logic;
+    HDMI_CLK_N                     : out     std_logic;
+    HDMI_CLK_P                     : out     std_logic;
     
-    -- I2C_PL
-    I2C_INT_N_LS                   : in      std_logic;
-    I2C_SCL_LS                     : inout   std_logic;
-    I2C_SDA_LS                     : inout   std_logic;
+    -- I2C FPGA
+    I2C_SCL_FPGA                   : inout   std_logic;
+    I2C_SDA_FPGA                   : inout   std_logic;
+    
+    -- I2C_MIPI_SEL
+    I2C_MIPI_SEL                   : inout   std_logic;
+    
+    -- PL I2C
+    I2C_INT_N                      : in      std_logic;
+    I2C_SCL                        : inout   std_logic;
+    I2C_SDA                        : inout   std_logic;
+    
+    -- IO2
+    IO2_D0_P                       : inout   std_logic;
+    IO2_D1_N                       : inout   std_logic;
+    IO2_D2_P                       : inout   std_logic;
+    IO2_D3_N                       : inout   std_logic;
     
     -- IO3
     IO3_D0_P                       : inout   std_logic;
@@ -233,7 +290,7 @@ entity Mercury_KX2_ST1 is
     IO4_D6_P                       : inout   std_logic;
     IO4_D7_N                       : inout   std_logic;
     
-    -- LEDs
+    -- LED
     LED0_N                         : out     std_logic;
     LED1_N                         : out     std_logic;
     LED2_N                         : out     std_logic;
@@ -244,25 +301,25 @@ entity Mercury_KX2_ST1 is
     MIPI0_D0_P                     : inout   std_logic;
     MIPI0_D1_N                     : inout   std_logic;
     MIPI0_D1_P                     : inout   std_logic;
-    MIPI0_CLK_N                    : inout   std_logic;
-    MIPI0_CLK_P                    : inout   std_logic;
     MIPI0_CLK_D0LP_N               : inout   std_logic;
     MIPI0_CLK_D0LP_P               : inout   std_logic;
+    MIPI0_CLK_N                    : inout   std_logic;
+    MIPI0_CLK_P                    : inout   std_logic;
     
     -- MIPI1
     MIPI1_D0_N                     : inout   std_logic;
     MIPI1_D0_P                     : inout   std_logic;
     MIPI1_D1_N                     : inout   std_logic;
     MIPI1_D1_P                     : inout   std_logic;
-    MIPI1_CLK_N                    : inout   std_logic;
-    MIPI1_CLK_P                    : inout   std_logic;
     MIPI1_CLK_D0LP_N               : inout   std_logic;
     MIPI1_CLK_D0LP_P               : inout   std_logic;
+    MIPI1_CLK_N                    : inout   std_logic;
+    MIPI1_CLK_P                    : inout   std_logic;
     
-    -- OSC_100M
+    -- Oscillator 100 MHz
     CLK_100_CAL                    : in      std_logic;
     
-    -- PL_DDR3_Memory
+    -- SDRAM
     DDR3_VSEL                      : inout   std_logic;
     DDR3_WE_N                      : out     std_logic;
     DDR3_CAS_N                     : out     std_logic;
@@ -280,7 +337,7 @@ entity Mercury_KX2_ST1 is
     DDR3_DQS_N                     : inout   std_logic_vector(7 downto 0);
     DDR3_DQS_P                     : inout   std_logic_vector(7 downto 0);
     
-    -- PL_Gigabit_Ethernet_0
+    -- PL Gigabit Ethernet Interface 0
     FPGA_MDC_PUDC_N                : out     std_logic;
     ETH0_RX_CLK                    : in      std_logic;
     ETH0_TX_CLK                    : out     std_logic;
@@ -290,7 +347,7 @@ entity Mercury_KX2_ST1 is
     ETH0_RX_D                      : in      std_logic_vector(3 downto 0);
     ETH0_TX_D                      : out     std_logic_vector(3 downto 0);
     
-    -- PL_Gigabit_Ethernet_1
+    -- PL Gigabit Ethernet Interface 1
     ETH1_RX_CLK                    : in      std_logic;
     ETH1_TX_CLK                    : out     std_logic;
     ETH1_RX_CTL                    : in      std_logic;
@@ -309,7 +366,11 @@ entity Mercury_KX2_ST1 is
     -- Rst_N
     Rst_N                          : in      std_logic;
     
-    -- ST1_LED
+    -- ST1 LED
+    LED2                           : out     std_logic;
+    LED3                           : out     std_logic;
+    
+    -- ST1 LED GPIO
     GPIO0_LED0_N                   : out     std_logic;
     GPIO1_LED1_N                   : out     std_logic;
     
@@ -333,7 +394,17 @@ entity Mercury_KX2_ST1 is
     FTDI_WR_N                      : out     std_logic;
     FTDI_RXF_N                     : in      std_logic;
     FTDI_TXE_N                     : in      std_logic;
-    FTDI_CLKOUT                    : inout   std_logic
+    FTDI_CLKOUT                    : inout   std_logic;
+    
+    -- USB3
+    USB0_SSRX_N                    : inout   std_logic;
+    USB1_SSRX_N                    : inout   std_logic;
+    USB0_SSRX_P                    : inout   std_logic;
+    USB1_SSRX_P                    : inout   std_logic;
+    USB0_SSTX_N                    : inout   std_logic;
+    USB1_SSTX_N                    : inout   std_logic;
+    USB0_SSTX_P                    : inout   std_logic;
+    USB1_SSTX_P                    : inout   std_logic
   );
 end Mercury_KX2_ST1;
 
@@ -346,6 +417,12 @@ architecture rtl of Mercury_KX2_ST1 is
     port (
       SYS_CLK_clk_p       : in     std_logic;
       SYS_CLK_clk_n       : in     std_logic;
+      IIC_FPGA_sda_i      : in     std_logic;
+      IIC_FPGA_sda_o      : out    std_logic;
+      IIC_FPGA_sda_t      : out    std_logic;
+      IIC_FPGA_scl_i      : in     std_logic;
+      IIC_FPGA_scl_o      : out    std_logic;
+      IIC_FPGA_scl_t      : out    std_logic;
       IIC_sda_i           : in     std_logic;
       IIC_sda_o           : out    std_logic;
       IIC_sda_t           : out    std_logic;
@@ -406,17 +483,23 @@ architecture rtl of Mercury_KX2_ST1 is
   end component Mercury_KX2;
   
   component IOBUF is
-  port (
-  	I : in STD_LOGIC;
-  	O : out STD_LOGIC;
-  	T : in STD_LOGIC;
-  	IO : inout STD_LOGIC
-  );
+    port (
+      I : in STD_LOGIC;
+      O : out STD_LOGIC;
+      T : in STD_LOGIC;
+      IO : inout STD_LOGIC
+    );
   end component IOBUF;
 
   ---------------------------------------------------------------------------------------------------
   -- signal declarations
   ---------------------------------------------------------------------------------------------------
+  signal IIC_FPGA_sda_i   : std_logic;
+  signal IIC_FPGA_sda_o   : std_logic;
+  signal IIC_FPGA_sda_t   : std_logic;
+  signal IIC_FPGA_scl_i   : std_logic;
+  signal IIC_FPGA_scl_o   : std_logic;
+  signal IIC_FPGA_scl_t   : std_logic;
   signal IIC_sda_i        : std_logic;
   signal IIC_sda_o        : std_logic;
   signal IIC_sda_t        : std_logic;
@@ -463,6 +546,12 @@ begin
     port map (
       SYS_CLK_clk_p        => Clk200_P,
       SYS_CLK_clk_n        => Clk200_N,
+      IIC_FPGA_sda_i       => IIC_FPGA_sda_i,
+      IIC_FPGA_sda_o       => IIC_FPGA_sda_o,
+      IIC_FPGA_sda_t       => IIC_FPGA_sda_t,
+      IIC_FPGA_scl_i       => IIC_FPGA_scl_i,
+      IIC_FPGA_scl_o       => IIC_FPGA_scl_o,
+      IIC_FPGA_scl_t       => IIC_FPGA_scl_t,
       IIC_sda_i            => IIC_sda_i,
       IIC_sda_o            => IIC_sda_o,
       IIC_sda_t            => IIC_sda_t,
@@ -520,21 +609,38 @@ begin
       UART_FTDI_KX2_txd    => FTDI_UART_TX
     );
   
-  IIC_sda_iobuf: component IOBUF
-  	port map (
-  	I => IIC_sda_o,
-  	IO => I2C_SDA_LS,
-  	O => IIC_sda_i,
-  	T => IIC_sda_t
-  );
+  IIC_FPGA_scl_iobuf: component IOBUF
+    port map (
+      I => IIC_FPGA_scl_o,
+      IO => I2C_SCL_FPGA,
+      O => IIC_FPGA_scl_i,
+      T => IIC_FPGA_scl_t
+    );
+  
+  IIC_FPGA_sda_iobuf: component IOBUF
+    port map (
+      I => IIC_FPGA_sda_o,
+      IO => I2C_SDA_FPGA,
+      O => IIC_FPGA_sda_i,
+      T => IIC_FPGA_sda_t
+    );
   
   IIC_scl_iobuf: component IOBUF
-  	port map (
-  	I => IIC_scl_o,
-  	IO => I2C_SCL_LS,
-  	O => IIC_scl_i,
-  	T => IIC_scl_t
-  );
+    port map (
+      I => IIC_scl_o,
+      IO => I2C_SCL,
+      O => IIC_scl_i,
+      T => IIC_scl_t
+    );
+  
+  IIC_sda_iobuf: component IOBUF
+    port map (
+      I => IIC_sda_o,
+      IO => I2C_SDA,
+      O => IIC_sda_i,
+      T => IIC_sda_t
+    );
+  
   process (Clk50)
   begin
     if rising_edge (Clk50) then
@@ -549,14 +655,15 @@ begin
   LED1_N <= '0' when LED_N(0) = '0' else 'Z';
   LED2_N <= '0' when LED_N(1) = '0' else 'Z';
   LED3_N <= '0' when LED_N(2) = '0' else 'Z';
+  
   DDR3_VSEL <= 'Z'; -- assign to '0' for DDR3PL 1.35 V operation
   
   mdio_MDIO_iobuf: component IOBUF
-  	port map (
-  	I => MDIO_mdio_o,
-  	IO => FPGA_MDIO_EMCCLK,
-  	O => MDIO_mdio_i,
-  	T => MDIO_mdio_t
+      port map (
+      I => MDIO_mdio_o,
+      IO => FPGA_MDIO_EMCCLK,
+      O => MDIO_mdio_i,
+      T => MDIO_mdio_t
   );
   
   QSPI_io0_iobuf: component IOBUF
@@ -566,38 +673,34 @@ begin
   	O => QSPI_io0_i,
   	T => QSPI_io0_t
   );
-  
   QSPI_io1_iobuf: component IOBUF
-  	port map (
-  	I => QSPI_io1_o,
-  	IO => FLASH_DO,
-  	O => QSPI_io1_i,
-  	T => QSPI_io1_t
+      port map (
+      I => QSPI_io1_o,
+      IO => FLASH_DO,
+      O => QSPI_io1_i,
+      T => QSPI_io1_t
   );
-  
   QSPI_io2_iobuf: component IOBUF
-  	port map (
-  	I => QSPI_io2_o,
-  	IO => FLASH_WP_N,
-  	O => QSPI_io2_i,
-  	T => QSPI_io2_t
+      port map (
+      I => QSPI_io2_o,
+      IO => FLASH_WP_N,
+      O => QSPI_io2_i,
+      T => QSPI_io2_t
   );
-  
   QSPI_io3_iobuf: component IOBUF
-  	port map (
-  	I => QSPI_io3_o,
-  	IO => FLASH_HOLD_N,
-  	O => QSPI_io3_i,
-  	T => QSPI_io3_t
+      port map (
+      I => QSPI_io3_o,
+      IO => FLASH_HOLD_N,
+      O => QSPI_io3_i,
+      T => QSPI_io3_t
   );
-  
   QSPI_ss_iobuf_0: component IOBUF
-  	port map (
-  	I => QSPI_ss_o,
-  	IO => FLASH_CS_N,
-  	O => QSPI_ss_i,
-  	T => QSPI_ss_t
+      port map (
+      I => QSPI_ss_o,
+      IO => FLASH_CS_N,
+      O => QSPI_ss_i,
+      T => QSPI_ss_t
   );
   FPGA_CCLK <= 'Z'; -- startup2 block is used
-
+  
 end rtl;

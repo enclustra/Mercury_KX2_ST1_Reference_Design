@@ -1,5 +1,5 @@
 # ----------------------------------------------------------------------------------
-# Copyright (c) 2021 by Enclustra GmbH, Switzerland.
+# Copyright (c) 2022 by Enclustra GmbH, Switzerland.
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy of
 # this hardware, software, firmware, and associated documentation files (the
@@ -21,18 +21,14 @@
 
 # Project settings for Mercury KX2 Reference Design
 # Valid module codes
-# ME-KX2-160-1C-D10
 # ME-KX2-160-2I-D11-P
-# ME-KX2-325-2I-D11-P
 # ME-KX2-410-2I-D11-P
-# ME-KX2-160-1C-D10-ETH
 # ME-KX2-160-2I-D11-P-ETH
-# ME-KX2-325-2I-D11-P-ETH
 # ME-KX2-410-2I-D11-P-ETH
 
 # ----------------------------------------------------------------------------------
 # Modify this variable to select your module
-if {![info exists module_name]} {set module_name ME-KX2-160-1C-D10}
+if {![info exists module_name]} {set module_name ME-KX2-160-2I-D11-P}
 if {![info exists baseboard]}   {set baseboard ST1}
 # ----------------------------------------------------------------------------------
 
@@ -44,41 +40,22 @@ if {![info exists baseboard]}   {set baseboard ST1}
 if {[lindex $argv 0] != ""} { set module_name [lindex $argv 0] }
 
 set module Mercury_KX2
+set family kintex
 
 switch $module_name {
-  ME-KX2-160-1C-D10 {
-    set part xc7k160tfbg676-1 
-    set PL_DDR PL_DDR_FBG160
-    set ETH None
-  }
   ME-KX2-160-2I-D11-P {
     set part xc7k160tffg676-2 
     set PL_DDR PL_DDR_FFG160
-    set ETH None
-  }
-  ME-KX2-325-2I-D11-P {
-    set part xc7k325tffg676-2 
-    set PL_DDR PL_DDR_FFG325
-    set ETH None
+    set ETH No_ETH
   }
   ME-KX2-410-2I-D11-P {
     set part xc7k410tffg676-2 
     set PL_DDR PL_DDR_FFG410
-    set ETH None
-  }
-  ME-KX2-160-1C-D10-ETH {
-    set part xc7k160tfbg676-1 
-    set PL_DDR PL_DDR_FBG160
-    set ETH ETH
+    set ETH No_ETH
   }
   ME-KX2-160-2I-D11-P-ETH {
     set part xc7k160tffg676-2 
     set PL_DDR PL_DDR_FFG160
-    set ETH ETH
-  }
-  ME-KX2-325-2I-D11-P-ETH {
-    set part xc7k325tffg676-2 
-    set PL_DDR PL_DDR_FFG325
     set ETH ETH
   }
   ME-KX2-410-2I-D11-P-ETH {
@@ -97,7 +74,6 @@ if {![info exists project_name]} {
   set project_name ${module}
   if {[info exists baseboard]} {
     lappend project_name ${baseboard}
-    puts $project_name
   }
   set project_name [string map {" " "_"} "${project_name}"]
 }
