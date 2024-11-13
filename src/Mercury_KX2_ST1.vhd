@@ -1,5 +1,5 @@
----------------------------------------------------------------------------------------------------
--- Copyright (c) 2022 by Enclustra GmbH, Switzerland.
+----------------------------------------------------------------------------------------------------
+-- Copyright (c) 2024 by Enclustra GmbH, Switzerland.
 --
 -- Permission is hereby granted, free of charge, to any person obtaining a copy of
 -- this hardware, software, firmware, and associated documentation files (the
@@ -17,18 +17,21 @@
 -- HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
 -- OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 -- PRODUCT OR THE USE OR OTHER DEALINGS IN THE PRODUCT.
----------------------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------------------
 
----------------------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------------------
 -- libraries
----------------------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------------------
 library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 
----------------------------------------------------------------------------------------------------
+library unisim;
+use unisim.vcomponents.all;
+
+----------------------------------------------------------------------------------------------------
 -- entity declaration
----------------------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------------------
 entity Mercury_KX2_ST1 is
   generic (
     DDR3_ADDR_WIDTH : natural
@@ -89,8 +92,8 @@ entity Mercury_KX2_ST1 is
     IO1_D21_N                      : inout   std_logic;
     IO1_D22_P                      : inout   std_logic;
     IO1_D23_N                      : inout   std_logic;
-    IO1_CLK1_N                     : inout   std_logic;
-    IO1_CLK0_P                     : inout   std_logic;
+    IO1_CLK_N                      : inout   std_logic;
+    IO1_CLK_P                      : inout   std_logic;
     
     -- BUTTONS
     BTN0_N                         : in      std_logic;
@@ -103,6 +106,10 @@ entity Mercury_KX2_ST1 is
     -- Clock Generator CLK3
     CLK_REF2_N                     : in      std_logic;
     CLK_REF2_P                     : in      std_logic;
+    
+    -- Clock Generator CLK0
+    CLK_USR_N                      : in      std_logic;
+    CLK_USR_P                      : in      std_logic;
     
     -- 100 MHz clock
     Clk100_R                       : in      std_logic;
@@ -296,26 +303,6 @@ entity Mercury_KX2_ST1 is
     LED2_N                         : out     std_logic;
     LED3_N                         : out     std_logic;
     
-    -- MIPI0
-    MIPI0_D0_N                     : inout   std_logic;
-    MIPI0_D0_P                     : inout   std_logic;
-    MIPI0_D1_N                     : inout   std_logic;
-    MIPI0_D1_P                     : inout   std_logic;
-    MIPI0_CLK_D0LP_N               : inout   std_logic;
-    MIPI0_CLK_D0LP_P               : inout   std_logic;
-    MIPI0_CLK_N                    : inout   std_logic;
-    MIPI0_CLK_P                    : inout   std_logic;
-    
-    -- MIPI1
-    MIPI1_D0_N                     : inout   std_logic;
-    MIPI1_D0_P                     : inout   std_logic;
-    MIPI1_D1_N                     : inout   std_logic;
-    MIPI1_D1_P                     : inout   std_logic;
-    MIPI1_CLK_D0LP_N               : inout   std_logic;
-    MIPI1_CLK_D0LP_P               : inout   std_logic;
-    MIPI1_CLK_N                    : inout   std_logic;
-    MIPI1_CLK_P                    : inout   std_logic;
-    
     -- Oscillator 100 MHz
     CLK_100_CAL                    : in      std_logic;
     
@@ -366,6 +353,14 @@ entity Mercury_KX2_ST1 is
     -- Rst_N
     Rst_N                          : in      std_logic;
     
+    -- SDIO
+    SDIO_CLK                       : inout   std_logic;
+    SDIO_CMD                       : inout   std_logic;
+    SDIO_D0                        : inout   std_logic;
+    SDIO_D1                        : inout   std_logic;
+    SDIO_D2                        : inout   std_logic;
+    SDIO_D3                        : inout   std_logic;
+    
     -- ST1 LED
     LED2                           : out     std_logic;
     LED3                           : out     std_logic;
@@ -410,9 +405,9 @@ end Mercury_KX2_ST1;
 
 architecture rtl of Mercury_KX2_ST1 is
 
-  ---------------------------------------------------------------------------------------------------
+  ----------------------------------------------------------------------------------------------------
   -- component declarations
-  ---------------------------------------------------------------------------------------------------
+  ----------------------------------------------------------------------------------------------------
   component Mercury_KX2 is
     port (
       SYS_CLK_clk_p       : in     std_logic;
@@ -481,6 +476,14 @@ architecture rtl of Mercury_KX2_ST1 is
     );
     
   end component Mercury_KX2;
+  component IBUFDS is
+      port (
+        O : out STD_LOGIC;
+        I : in STD_LOGIC;
+        IB : in STD_LOGIC
+      );
+    end component IBUFDS;
+  
   
   component IOBUF is
     port (
@@ -491,9 +494,9 @@ architecture rtl of Mercury_KX2_ST1 is
     );
   end component IOBUF;
 
-  ---------------------------------------------------------------------------------------------------
+  ----------------------------------------------------------------------------------------------------
   -- signal declarations
-  ---------------------------------------------------------------------------------------------------
+  ----------------------------------------------------------------------------------------------------
   signal IIC_FPGA_sda_i   : std_logic;
   signal IIC_FPGA_sda_o   : std_logic;
   signal IIC_FPGA_sda_t   : std_logic;
@@ -536,12 +539,16 @@ architecture rtl of Mercury_KX2_ST1 is
   signal RGMII_tx_ctl     : std_logic;
   signal RGMII_txc        : std_logic;
   signal LedCount         : unsigned(23 downto 0);
+  
+  ----------------------------------------------------------------------------------------------------
+  -- attribute declarations
+  ----------------------------------------------------------------------------------------------------
 
 begin
   
-  ---------------------------------------------------------------------------------------------------
+  ----------------------------------------------------------------------------------------------------
   -- processor system instance
-  ---------------------------------------------------------------------------------------------------
+  ----------------------------------------------------------------------------------------------------
   Mercury_KX2_i: component Mercury_KX2
     port map (
       SYS_CLK_clk_p        => Clk200_P,
@@ -609,6 +616,13 @@ begin
       UART_FTDI_KX2_txd    => FTDI_UART_TX
     );
   
+  CLK_USR_buf: component IBUFDS
+  port map (
+  	O => open,
+  	I => CLK_USR_P,
+  	IB => CLK_USR_N
+  );
+  
   IIC_FPGA_scl_iobuf: component IOBUF
     port map (
       I => IIC_FPGA_scl_o,
@@ -624,7 +638,6 @@ begin
       O => IIC_FPGA_sda_i,
       T => IIC_FPGA_sda_t
     );
-  
   IIC_scl_iobuf: component IOBUF
     port map (
       I => IIC_scl_o,
@@ -640,7 +653,6 @@ begin
       O => IIC_sda_i,
       T => IIC_sda_t
     );
-  
   process (Clk50)
   begin
     if rising_edge (Clk50) then
@@ -702,5 +714,11 @@ begin
       T => QSPI_ss_t
   );
   FPGA_CCLK <= 'Z'; -- startup2 block is used
+  
+  LED2 <= 'Z';
+  LED3 <= 'Z';
+  
+  LED2 <= 'Z';
+  LED3 <= 'Z';
   
 end rtl;

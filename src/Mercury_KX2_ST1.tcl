@@ -1,5 +1,5 @@
-# ----------------------------------------------------------------------------------
-# Copyright (c) 2022 by Enclustra GmbH, Switzerland.
+# ----------------------------------------------------------------------------------------------------
+# Copyright (c) 2024 by Enclustra GmbH, Switzerland.
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy of
 # this hardware, software, firmware, and associated documentation files (the
@@ -17,16 +17,10 @@
 # HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
 # OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 # PRODUCT OR THE USE OR OTHER DEALINGS IN THE PRODUCT.
-# ----------------------------------------------------------------------------------
+# ----------------------------------------------------------------------------------------------------
 
 set_property CFGBVS VCCO [current_design]
 set_property CONFIG_VOLTAGE 3.3 [current_design]
-set_property BITSTREAM.GENERAL.COMPRESS TRUE [current_design]
-set_property BITSTREAM.CONFIG.SPI_32BIT_ADDR YES [current_design]
-set_property BITSTREAM.CONFIG.CONFIGRATE 66 [current_design]
-set_property BITSTREAM.CONFIG.SPI_FALL_EDGE YES [current_design]
-set_property BITSTREAM.CONFIG.SPI_BUSWIDTH 4 [current_design]
-set_property CONFIG_MODE SPIx4 [current_design]
 set_property BITSTREAM.CONFIG.OVERTEMPPOWERDOWN ENABLE [current_design]
  
 # ----------------------------------------------------------------------------------
@@ -35,6 +29,12 @@ set_property BITSTREAM.CONFIG.OVERTEMPPOWERDOWN ENABLE [current_design]
 # If the constraint is removed, all unused pins have to be set to HiZ in the top level file.
 set_property BITSTREAM.CONFIG.UNUSEDPIN PULLNONE [current_design]
 # ----------------------------------------------------------------------------------
+set_property BITSTREAM.GENERAL.COMPRESS TRUE [current_design]
+set_property BITSTREAM.CONFIG.SPI_32BIT_ADDR YES [current_design]
+set_property BITSTREAM.CONFIG.CONFIGRATE 66 [current_design]
+set_property BITSTREAM.CONFIG.SPI_FALL_EDGE YES [current_design]
+set_property BITSTREAM.CONFIG.SPI_BUSWIDTH 4 [current_design]
+set_property CONFIG_MODE SPIx4 [current_design]
 
 # Anios 0
 set_property -dict {PACKAGE_PIN AA23  IOSTANDARD LVCMOS33  } [get_ports {IO0_D0_P}]
@@ -89,21 +89,26 @@ set_property -dict {PACKAGE_PIN U17   IOSTANDARD LVCMOS33  } [get_ports {IO1_D20
 set_property -dict {PACKAGE_PIN T17   IOSTANDARD LVCMOS33  } [get_ports {IO1_D21_N}]
 set_property -dict {PACKAGE_PIN P16   IOSTANDARD LVCMOS33  } [get_ports {IO1_D22_P}]
 set_property -dict {PACKAGE_PIN N17   IOSTANDARD LVCMOS33  } [get_ports {IO1_D23_N}]
-set_property -dict {PACKAGE_PIN R23   IOSTANDARD LVCMOS33  } [get_ports {IO1_CLK1_N}]
-set_property -dict {PACKAGE_PIN R22   IOSTANDARD LVCMOS33  } [get_ports {IO1_CLK0_P}]
+set_property -dict {PACKAGE_PIN R23   IOSTANDARD LVCMOS33  } [get_ports {IO1_CLK_N}]
+set_property -dict {PACKAGE_PIN R22   IOSTANDARD LVCMOS33  } [get_ports {IO1_CLK_P}]
 
 # BUTTONS
 set_property -dict {PACKAGE_PIN C22   IOSTANDARD LVCMOS33  } [get_ports {BTN0_N}]
 set_property -dict {PACKAGE_PIN AD23  IOSTANDARD LVCMOS33  } [get_ports {BTN1_N}]
 
 # Clock Generator CLK1
+# set_property PACKAGE_PIN D5    [get_ports {CLK_REF0_N}] # GTX
+# set_property PACKAGE_PIN D6    [get_ports {CLK_REF0_P}] # GTX
 
 # Clock Generator CLK3
 set_property -dict {PACKAGE_PIN U16   IOSTANDARD LVCMOS33  } [get_ports {CLK_REF2_N}]
 set_property -dict {PACKAGE_PIN N16   IOSTANDARD LVCMOS33  } [get_ports {CLK_REF2_P}]
 
+# Clock Generator CLK0
+set_property -dict {PACKAGE_PIN AA22  IOSTANDARD DIFF_SSTL18_I} [get_ports {CLK_USR_N}]
+set_property -dict {PACKAGE_PIN Y22   IOSTANDARD DIFF_SSTL18_I} [get_ports {CLK_USR_P}]
+
 # 100 MHz clock
-create_clock -name Clk100_R -period 10.000 [get_ports Clk100_R]
 set_property -dict {PACKAGE_PIN AA4   IOSTANDARD SSTL15    } [get_ports {Clk100_R}]
 
 # 200 MHz differential clock
@@ -117,6 +122,14 @@ set_property -dict {PACKAGE_PIN E22   IOSTANDARD LVCMOS33  } [get_ports {DP_HPD}
 set_property -dict {PACKAGE_PIN D23   IOSTANDARD LVCMOS33  } [get_ports {DP_AUX_IN}]
 set_property -dict {PACKAGE_PIN E21   IOSTANDARD LVCMOS33  } [get_ports {DP_AUX_OE}]
 set_property -dict {PACKAGE_PIN D24   IOSTANDARD LVCMOS33  } [get_ports {DP_AUX_OUT}]
+# set_property PACKAGE_PIN M1    [get_ports {DP_LANE0_N}] # GTX
+# set_property PACKAGE_PIN N3    [get_ports {DP_LANE3_N}] # GTX
+# set_property PACKAGE_PIN M2    [get_ports {DP_LANE0_P}] # GTX
+# set_property PACKAGE_PIN N4    [get_ports {DP_LANE3_P}] # GTX
+# set_property PACKAGE_PIN P1    [get_ports {DP_LANE1_N}] # GTX
+# set_property PACKAGE_PIN R3    [get_ports {DP_LANE2_N}] # GTX
+# set_property PACKAGE_PIN P2    [get_ports {DP_LANE1_P}] # GTX
+# set_property PACKAGE_PIN R4    [get_ports {DP_LANE2_P}] # GTX
 
 # FMC HPC Connector
 set_property -dict {PACKAGE_PIN H8    IOSTANDARD LVCMOS33  } [get_ports {FMC_HA02_N}]
@@ -203,6 +216,22 @@ set_property -dict {PACKAGE_PIN D13   IOSTANDARD LVCMOS33  } [get_ports {FMC_LA3
 set_property -dict {PACKAGE_PIN D14   IOSTANDARD LVCMOS33  } [get_ports {FMC_LA32_P}]
 set_property -dict {PACKAGE_PIN C13   IOSTANDARD LVCMOS33  } [get_ports {FMC_LA33_N}]
 set_property -dict {PACKAGE_PIN C14   IOSTANDARD LVCMOS33  } [get_ports {FMC_LA33_P}]
+# set_property PACKAGE_PIN F1    [get_ports {FMC_DP0_C2M_N}] # GTX
+# set_property PACKAGE_PIN F2    [get_ports {FMC_DP0_C2M_P}] # GTX
+# set_property PACKAGE_PIN G3    [get_ports {FMC_DP0_M2C_N}] # GTX
+# set_property PACKAGE_PIN G4    [get_ports {FMC_DP0_M2C_P}] # GTX
+# set_property PACKAGE_PIN D1    [get_ports {FMC_DP1_C2M_N}] # GTX
+# set_property PACKAGE_PIN D2    [get_ports {FMC_DP1_C2M_P}] # GTX
+# set_property PACKAGE_PIN E3    [get_ports {FMC_DP1_M2C_N}] # GTX
+# set_property PACKAGE_PIN E4    [get_ports {FMC_DP1_M2C_P}] # GTX
+# set_property PACKAGE_PIN B1    [get_ports {FMC_DP2_C2M_N}] # GTX
+# set_property PACKAGE_PIN B2    [get_ports {FMC_DP2_C2M_P}] # GTX
+# set_property PACKAGE_PIN C3    [get_ports {FMC_DP2_M2C_N}] # GTX
+# set_property PACKAGE_PIN C4    [get_ports {FMC_DP2_M2C_P}] # GTX
+# set_property PACKAGE_PIN A3    [get_ports {FMC_DP3_C2M_N}] # GTX
+# set_property PACKAGE_PIN A4    [get_ports {FMC_DP3_C2M_P}] # GTX
+# set_property PACKAGE_PIN B5    [get_ports {FMC_DP3_M2C_N}] # GTX
+# set_property PACKAGE_PIN B6    [get_ports {FMC_DP3_M2C_P}] # GTX
 set_property -dict {PACKAGE_PIN E17   IOSTANDARD LVCMOS33  } [get_ports {FMC_HA00_CC_N}]
 set_property -dict {PACKAGE_PIN F17   IOSTANDARD LVCMOS33  } [get_ports {FMC_HA00_CC_P}]
 set_property -dict {PACKAGE_PIN D10   IOSTANDARD LVCMOS33  } [get_ports {FMC_HA01_CC_N}]
@@ -221,6 +250,8 @@ set_property -dict {PACKAGE_PIN H18   IOSTANDARD LVCMOS33  } [get_ports {FMC_CLK
 set_property -dict {PACKAGE_PIN H17   IOSTANDARD LVCMOS33  } [get_ports {FMC_CLK0_M2C_P}]
 set_property -dict {PACKAGE_PIN F10   IOSTANDARD LVCMOS33  } [get_ports {FMC_CLK1_M2C_N}]
 set_property -dict {PACKAGE_PIN G11   IOSTANDARD LVCMOS33  } [get_ports {FMC_CLK1_M2C_P}]
+# set_property PACKAGE_PIN K5    [get_ports {FMC_GCLK0_M2C_N}] # GTX
+# set_property PACKAGE_PIN K6    [get_ports {FMC_GCLK0_M2C_P}] # GTX
 
 # HDMI
 set_property -dict {PACKAGE_PIN U26   IOSTANDARD LVCMOS33  } [get_ports {HDMI_HPD}]
@@ -235,7 +266,6 @@ set_property -dict {PACKAGE_PIN W26   IOSTANDARD LVCMOS33  } [get_ports {I2C_SDA
 set_property -dict {PACKAGE_PIN V26   IOSTANDARD LVCMOS33  } [get_ports {I2C_MIPI_SEL}]
 
 # PL I2C
-set_property SLEW SLOW [get_ports I2C_INT_N]
 set_property SLEW SLOW [get_ports I2C_SDA]
 set_property SLEW SLOW [get_ports I2C_SCL]
 set_property -dict {PACKAGE_PIN AC18  IOSTANDARD SSTL15    } [get_ports {I2C_INT_N}]
@@ -243,6 +273,10 @@ set_property -dict {PACKAGE_PIN L23   IOSTANDARD LVCMOS33  } [get_ports {I2C_SCL
 set_property -dict {PACKAGE_PIN C24   IOSTANDARD LVCMOS33  } [get_ports {I2C_SDA}]
 
 # IO2
+# set_property PACKAGE_PIN H6    [get_ports {IO2_D0_P}] # GTX
+# set_property PACKAGE_PIN H5    [get_ports {IO2_D1_N}] # GTX
+# set_property PACKAGE_PIN F6    [get_ports {IO2_D2_P}] # GTX
+# set_property PACKAGE_PIN F5    [get_ports {IO2_D3_N}] # GTX
 
 # IO3
 set_property -dict {PACKAGE_PIN Y23   IOSTANDARD LVCMOS33  } [get_ports {IO3_D0_P}]
@@ -273,26 +307,6 @@ set_property -dict {PACKAGE_PIN U9    IOSTANDARD SSTL15    } [get_ports {LED0_N}
 set_property -dict {PACKAGE_PIN V12   IOSTANDARD SSTL15    } [get_ports {LED1_N}]
 set_property -dict {PACKAGE_PIN V13   IOSTANDARD SSTL15    } [get_ports {LED2_N}]
 set_property -dict {PACKAGE_PIN W13   IOSTANDARD SSTL15    } [get_ports {LED3_N}]
-
-# MIPI0
-set_property -dict {PACKAGE_PIN P25   IOSTANDARD LVCMOS33  } [get_ports {MIPI0_D0_N}]
-set_property -dict {PACKAGE_PIN R25   IOSTANDARD LVCMOS33  } [get_ports {MIPI0_D0_P}]
-set_property -dict {PACKAGE_PIN L24   IOSTANDARD LVCMOS33  } [get_ports {MIPI0_D1_N}]
-set_property -dict {PACKAGE_PIN M24   IOSTANDARD LVCMOS33  } [get_ports {MIPI0_D1_P}]
-set_property -dict {PACKAGE_PIN L25   IOSTANDARD LVCMOS33  } [get_ports {MIPI0_CLK_D0LP_N}]
-set_property -dict {PACKAGE_PIN M25   IOSTANDARD LVCMOS33  } [get_ports {MIPI0_CLK_D0LP_P}]
-set_property -dict {PACKAGE_PIN P21   IOSTANDARD LVCMOS33  } [get_ports {MIPI0_CLK_N}]
-set_property -dict {PACKAGE_PIN R21   IOSTANDARD LVCMOS33  } [get_ports {MIPI0_CLK_P}]
-
-# MIPI1
-set_property -dict {PACKAGE_PIN M26   IOSTANDARD LVCMOS33  } [get_ports {MIPI1_D0_N}]
-set_property -dict {PACKAGE_PIN N26   IOSTANDARD LVCMOS33  } [get_ports {MIPI1_D0_P}]
-set_property -dict {PACKAGE_PIN M22   IOSTANDARD LVCMOS33  } [get_ports {MIPI1_D1_N}]
-set_property -dict {PACKAGE_PIN M21   IOSTANDARD LVCMOS33  } [get_ports {MIPI1_D1_P}]
-set_property -dict {PACKAGE_PIN P26   IOSTANDARD LVCMOS33  } [get_ports {MIPI1_CLK_D0LP_N}]
-set_property -dict {PACKAGE_PIN R26   IOSTANDARD LVCMOS33  } [get_ports {MIPI1_CLK_D0LP_P}]
-set_property -dict {PACKAGE_PIN N22   IOSTANDARD LVCMOS33  } [get_ports {MIPI1_CLK_N}]
-set_property -dict {PACKAGE_PIN N21   IOSTANDARD LVCMOS33  } [get_ports {MIPI1_CLK_P}]
 
 # Oscillator 100 MHz
 set_property -dict {PACKAGE_PIN AD24  IOSTANDARD LVCMOS33  } [get_ports {CLK_100_CAL}]
@@ -422,12 +436,12 @@ set_property -dict {PACKAGE_PIN W18   IOSTANDARD DIFF_SSTL15_T_DCI} [get_ports {
 set_property -dict {PACKAGE_PIN AB7   IOSTANDARD SSTL15    } [get_ports {DDR3_RST_N}]
 
 # PL Gigabit Ethernet Interface 0
-set_property SLEW FAST [get_ports ETH1_TX_CLK]
-set_property SLEW FAST [get_ports ETH1_TX_CTL]
-set_property SLEW FAST [get_ports {ETH1_TX_D[0]}]
-set_property SLEW FAST [get_ports {ETH1_TX_D[1]}]
-set_property SLEW FAST [get_ports {ETH1_TX_D[2]}]
-set_property SLEW FAST [get_ports {ETH1_TX_D[3]}]
+set_property SLEW FAST [get_ports ETH0_TX_CLK]
+set_property SLEW FAST [get_ports ETH0_TX_CTL]
+set_property SLEW FAST [get_ports {ETH0_TX_D[0]}]
+set_property SLEW FAST [get_ports {ETH0_TX_D[1]}]
+set_property SLEW FAST [get_ports {ETH0_TX_D[2]}]
+set_property SLEW FAST [get_ports {ETH0_TX_D[3]}]
 set_property -dict {PACKAGE_PIN B25   IOSTANDARD LVCMOS33  } [get_ports {FPGA_MDC_PUDC_N}]
 set_property -dict {PACKAGE_PIN H23   IOSTANDARD LVCMOS33  } [get_ports {ETH0_RX_D[0]}]
 set_property -dict {PACKAGE_PIN H24   IOSTANDARD LVCMOS33  } [get_ports {ETH0_RX_D[1]}]
@@ -444,12 +458,12 @@ set_property -dict {PACKAGE_PIN F23   IOSTANDARD LVCMOS33  } [get_ports {ETH0_RX
 set_property -dict {PACKAGE_PIN J23   IOSTANDARD LVCMOS33  } [get_ports {ETH0_TX_CTL}]
 
 # PL Gigabit Ethernet Interface 1
-set_property SLEW FAST [get_ports ETH0_TX_CLK]
-set_property SLEW FAST [get_ports ETH0_TX_CTL]
-set_property SLEW FAST [get_ports {ETH0_TX_D[0]}]
-set_property SLEW FAST [get_ports {ETH0_TX_D[1]}]
-set_property SLEW FAST [get_ports {ETH0_TX_D[2]}]
-set_property SLEW FAST [get_ports {ETH0_TX_D[3]}]
+set_property SLEW FAST [get_ports ETH1_TX_CLK]
+set_property SLEW FAST [get_ports ETH1_TX_CTL]
+set_property SLEW FAST [get_ports {ETH1_TX_D[0]}]
+set_property SLEW FAST [get_ports {ETH1_TX_D[1]}]
+set_property SLEW FAST [get_ports {ETH1_TX_D[2]}]
+set_property SLEW FAST [get_ports {ETH1_TX_D[3]}]
 set_property -dict {PACKAGE_PIN G25   IOSTANDARD LVCMOS33  } [get_ports {ETH1_RX_D[0]}]
 set_property -dict {PACKAGE_PIN G26   IOSTANDARD LVCMOS33  } [get_ports {ETH1_RX_D[1]}]
 set_property -dict {PACKAGE_PIN F25   IOSTANDARD LVCMOS33  } [get_ports {ETH1_RX_D[2]}]
@@ -479,6 +493,14 @@ set_property -dict {PACKAGE_PIN A22   IOSTANDARD LVCMOS33  } [get_ports {FLASH_H
 
 # Rst_N
 set_property -dict {PACKAGE_PIN AD9   IOSTANDARD SSTL15    } [get_ports {Rst_N}]
+
+# SDIO
+set_property -dict {PACKAGE_PIN C21   IOSTANDARD LVCMOS33  } [get_ports {SDIO_CLK}]
+set_property -dict {PACKAGE_PIN B21   IOSTANDARD LVCMOS33  } [get_ports {SDIO_CMD}]
+set_property -dict {PACKAGE_PIN D26   IOSTANDARD LVCMOS33  } [get_ports {SDIO_D0}]
+set_property -dict {PACKAGE_PIN C26   IOSTANDARD LVCMOS33  } [get_ports {SDIO_D1}]
+set_property -dict {PACKAGE_PIN A23   IOSTANDARD LVCMOS33  } [get_ports {SDIO_D2}]
+set_property -dict {PACKAGE_PIN A24   IOSTANDARD LVCMOS33  } [get_ports {SDIO_D3}]
 
 # ST1 LED
 set_property -dict {PACKAGE_PIN K25   IOSTANDARD LVCMOS33  } [get_ports {LED2}]
@@ -511,3 +533,11 @@ set_property -dict {PACKAGE_PIN AE7   IOSTANDARD SSTL15    } [get_ports {FTDI_TX
 set_property -dict {PACKAGE_PIN AC9   IOSTANDARD SSTL15    } [get_ports {FTDI_CLKOUT}]
 
 # USB3
+# set_property PACKAGE_PIN L3    [get_ports {USB0_SSRX_N}] # GTX
+# set_property PACKAGE_PIN J3    [get_ports {USB1_SSRX_N}] # GTX
+# set_property PACKAGE_PIN L4    [get_ports {USB0_SSRX_P}] # GTX
+# set_property PACKAGE_PIN J4    [get_ports {USB1_SSRX_P}] # GTX
+# set_property PACKAGE_PIN K1    [get_ports {USB0_SSTX_N}] # GTX
+# set_property PACKAGE_PIN H1    [get_ports {USB1_SSTX_N}] # GTX
+# set_property PACKAGE_PIN K2    [get_ports {USB0_SSTX_P}] # GTX
+# set_property PACKAGE_PIN H2    [get_ports {USB1_SSTX_P}] # GTX

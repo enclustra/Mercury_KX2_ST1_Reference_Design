@@ -2,14 +2,11 @@
 
 ## Maintainer
 
-Enlustra GmbH [support@enclustra.com]
+Enclustra GmbH [support@enclustra.com]
 
 ## Authors
 
-* Gian Koeppel
-* Daniel Duerner
-* Eike Sommer
-* Arthur Ruder
+* Enclustra GmbH
 
 ## Documentation
 
@@ -24,4 +21,4 @@ Enlustra GmbH [support@enclustra.com]
 See [Changelog](changelog.md).
 
 ## Description
-This repository contains the necessary files for creating the Enclustra reference design for all supported Mercury KX2 module variants in combination with the Mercury ST1 base board.
+This repository contains the necessary files for creating the Enclustra reference design for all supported Mercury KX2 product models in combination with the Mercury ST1 base board.

@@ -1,5 +1,5 @@
-# ----------------------------------------------------------------------------------
-# Copyright (c) 2022 by Enclustra GmbH, Switzerland.
+# ----------------------------------------------------------------------------------------------------
+# Copyright (c) 2024 by Enclustra GmbH, Switzerland.
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy of
 # this hardware, software, firmware, and associated documentation files (the
@@ -17,7 +17,7 @@
 # HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
 # OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 # PRODUCT OR THE USE OR OTHER DEALINGS IN THE PRODUCT.
-# ----------------------------------------------------------------------------------
+# ----------------------------------------------------------------------------------------------------
 
 # Project settings for Mercury KX2 Reference Design
 # Valid module codes
@@ -26,15 +26,16 @@
 # ME-KX2-160-2I-D11-P-ETH
 # ME-KX2-410-2I-D11-P-ETH
 
-# ----------------------------------------------------------------------------------
+# ----------------------------------------------------------------------------------------------------
 # Modify this variable to select your module
 if {![info exists module_name]} {set module_name ME-KX2-160-2I-D11-P}
 if {![info exists baseboard]}   {set baseboard ST1}
-# ----------------------------------------------------------------------------------
+if {![info exists vivado_dir]}   {set vivado_dir [file join Vivado ${module_name}] }
+# ----------------------------------------------------------------------------------------------------
 
-# ----------------------------------------------------------------------------------
+# ----------------------------------------------------------------------------------------------------
 # Don't modify anything beyond this line
-# ----------------------------------------------------------------------------------
+# ----------------------------------------------------------------------------------------------------
 
 #if any file argument are present, use this value
 if {[lindex $argv 0] != ""} { set module_name [lindex $argv 0] }
